@@ -10,18 +10,27 @@ class FullPost extends Component {
     
 //requesting data on update without creating an infinite loop
 
-    componentDidMount () {
+    loadData () {
+        console.log("loadData was called");
         if (this.props.match.params.id) {
-            if ( !this.state.loadedPost  || (this.state.loadedPost && this.state.loadedPost.id !== this.props.id)) {
+            if ( !this.state.loadedPost  || (this.state.loadedPost && this.state.loadedPost.id !== +this.props.match.params.id)) {
                 axios.get('posts/'+ this.props.match.params.id)
                 .then(response => {
                     this.setState({loadedPost: response.data});
                 });
                 }}
     }
+
+    componentDidUpdate () {
+        this.loadData();
+    }
+
+    componentDidMount () {
+        this.loadData();
+    }
     
     deletePostDataHandler = (id) => {
-        axios.delete('posts/'+ this.props.id)
+        axios.delete('posts/'+ this.props.match.params.id)
         .then(response => {
             console.log(response);
         });
@@ -29,7 +38,7 @@ class FullPost extends Component {
     
     render () {
         let post = <p style={{textAlign: 'center'}}>Please select a Post</p>;
-        if (this.props.id ) {
+        if (this.props.match.params.id ) {
             post = <p style={{textAlign: 'center'}}>Loading...</p>};
         if (this.state.loadedPost ) {
             post = (

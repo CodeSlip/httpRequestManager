@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './Blog.css';
 import Posts from './Posts/Posts';
-import { Route, NavLink, Switch } from 'react-router-dom';
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 import NewPost from '../Blog/NewPost/NewPost';
 
 
 class Blog extends Component {
 
+    state = {
+        auth : false
+    }
     render () {
 
         return (
@@ -16,7 +19,7 @@ class Blog extends Component {
                         {/* Nav link must be used to use inline styleling with activeStyle */}
                         <ul>
                             <li><NavLink 
-                            to="/posts/" 
+                            to="/posts" 
                             exact
                             activeClassName="my-active"
                             activeStyle={{
@@ -31,8 +34,11 @@ class Blog extends Component {
                 {/* <Route path="/" exact render={() => <h1>Home</h1>}/>
                 <Route path="/" render={() => <h1>Home</h1>}/> */}
                     <Switch>        
-                        <Route path="/new-post" component={NewPost} />
+                        {this.state.auth ? <Route path="/new-post" component={NewPost} /> : null}
                         <Route path="/posts" component={Posts}/>
+                        {/* <Redirect from="/" to="/posts" /> */}
+                        <Route render={() => <h1>Not Found</h1>}/> 
+                        {/* This is a catch all route and can be used with a 404 error page */}
                     </Switch>
             </div>
         );
