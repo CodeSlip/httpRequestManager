@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import './Blog.css';
 import Posts from './Posts/Posts';
-import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
-import NewPost from '../Blog/NewPost/NewPost';
+import { Route, NavLink, Switch } from 'react-router-dom';
+import asyncComponent from '../hoc/asyncComponent';
+//import NewPost from '../Blog/NewPost/NewPost'; // loading this via lazy loading
+// import { Redirect } from 'react-router-dom'; // not loading Redirect
 
+const AsyncNewPost = asyncComponent(() => {
+    return import('../Blog/NewPost/NewPost');
+});
 
 class Blog extends Component {
 
     state = {
-        auth : false
+        auth : true
     }
     render () {
 
@@ -34,10 +39,10 @@ class Blog extends Component {
                 {/* <Route path="/" exact render={() => <h1>Home</h1>}/>
                 <Route path="/" render={() => <h1>Home</h1>}/> */}
                     <Switch>        
-                        {this.state.auth ? <Route path="/new-post" component={NewPost} /> : null}
+                        {this.state.auth ? <Route path="/new-post" component={AsyncNewPost} /> : null}
                         <Route path="/posts" component={Posts}/>
-                        {/* <Redirect from="/" to="/posts" /> */}
                         <Route render={() => <h1>Not Found</h1>}/> 
+                        {/* <Redirect from="/" to="/posts" /> */}
                         {/* This is a catch all route and can be used with a 404 error page */}
                     </Switch>
             </div>
